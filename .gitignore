@@ -1,0 +1,7 @@
+.env
+__pycache__/
+results
+.DS_Store
+*.pt
+*.pth
+results/
