@@ -1,6 +1,6 @@
 ### Do Steering Vectors and RLHF Discover the Same Features?
 
-In this repo I'm trying to do an an empirical investigation into whether contrastive activation addition (steering vectors) and RLHF learn to represent behavioral traits using the same underlying features in transformer models.
+In this repo I've tried to do an an empirical investigation into whether contrastive activation addition (steering vectors) and RLHF learn to represent behavioral traits using the same underlying features in transformer models.
 
 ### The Problem
 When we steer a language model using activation differences (CAA/steering vectors) versus training it with RLHF, are we operating on the same feature space? Or do these methods carve up the model's internal representations differently?
@@ -42,7 +42,3 @@ jupyter notebook analyze_diff_sae.ipynb
 Early results suggest steering vectors reconstruct poorly in the diff-SAE basis (cosine similarity ~0.3-0.5), with high L0 sparsity (~8000/18432 features active). This hints that steering and RLHF may discover *related but distinct* feature representations rather than identical ones.
 
 More rigorous analysis ongoing.
-
----
-
-*Contributions welcome. This is a work in progress.*
