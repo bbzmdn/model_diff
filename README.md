@@ -39,6 +39,11 @@ jupyter notebook analyze_diff_sae.ipynb
 
 ### Preliminary Findings
 
-Early results suggest steering vectors reconstruct poorly in the diff-SAE basis (cosine similarity ~0.3-0.5), with high L0 sparsity (~8000/18432 features active). This hints that steering and RLHF may discover *related but distinct* feature representations rather than identical ones.
+Early results suggest steering vectors reconstruct poorly in the diff-SAE basis (cosine similarity ~0.3-0.5), with high L0 sparsity (~8000/18432 features active). 
 
-More rigorous analysis ongoing.
+### Limitations and Controls
+- Reconstruction-based metrics for steering vectors reflect the degree to which these vectors project onto the RLHF-derived subspace captured by the Diff-SAE. On their own, these metrics do not establish whether steering and RLHF rely on the same underlying causal features or mechanisms.
+
+- Decompositions performed on individual steering vectors are inherently noisy and sensitive to sampling effects. More robust conclusions require aggregation over distributions of prompts and token-level activations.
+
+- Also, a rigorous interpretation requires appropriate baselines, including experiments with random vectors and other control inputs. These are left to ongoing and future work.
