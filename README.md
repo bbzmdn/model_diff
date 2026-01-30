@@ -20,7 +20,7 @@ cp .env.example .env
 pip install torch transformers datasets jaxtyping python-dotenv
 ```
 
-Models default to Gemma-2-2B (base) and Gemma-2-2B-it (chat). Modify `.env` to experiment with other model pairs.
+Models default to Llama-3.1-8B (base) and Llama-3.1-8B-Instruct (instruct). Modify `.env` to experiment with other model pairs.
 
 ### Usage
 
@@ -35,7 +35,7 @@ python train_diff_sae.py
 jupyter notebook analyze_diff_sae.ipynb
 ```
 
-**Note**: Training requires ~40GB VRAM for Gemma-2-2B.
+**Note**: Training requires ~40GB VRAM for Llama-3.1-8B.
 
 ### Preliminary Findings
 
