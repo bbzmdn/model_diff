@@ -39,11 +39,20 @@ jupyter notebook analyze_diff_sae.ipynb
 
 ### Preliminary Findings
 
-Early results suggest steering vectors reconstruct poorly in the diff-SAE basis (cosine similarity ~0.3-0.5), with high L0 sparsity (~8000/18432 features active). 
+- High cosine similarity reflects linear alignment with the diff SAE subspace.
+- Base and chat models share highly aligned steering directions.
+- Sparse diff vectors provide a partial view; some nuanced category-specific features may be underrepresented.
+
 
 ### Limitations and Controls
-- Reconstruction-based metrics for steering vectors reflect the degree to which these vectors project onto the RLHF-derived subspace captured by the Diff-SAE. On their own, these metrics do not establish whether steering and RLHF rely on the same underlying causal features or mechanisms.
+The observed cosine similarity indicates geometric alignment between steering vectors and the diff-SAE subspace, but does not establish causal equivalence. Reconstruction measures whether steering vectors can be expressed in RLHF-derived features, not whether those features implement the same computations. Also, sparsity measurements require care; some reported sparsity statistics should be treated cautiously until analysis code is fully validated.
 
-- Decompositions performed on individual steering vectors are inherently noisy and sensitive to sampling effects. More robust conclusions require aggregation over distributions of prompts and token-level activations.
+The natural next step is causal testing. If steering and RLHF truly share features, then ablating the diff-SAE features most responsible for steering reconstructions should affect both steering-induced behaviors and behaviors the RLHF model exhibits naturally.
 
-- Also, a rigorous interpretation requires appropriate baselines, including experiments with random vectors and other control inputs. These are left to ongoing and future work.
+Future work could include:
+- causal ablations of shared latents
+- per-token decomposition rather than averaged vectors
+- random and orthogonal subspace baselines
+- cross-layer analysis of feature overlap
+
+

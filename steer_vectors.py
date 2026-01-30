@@ -132,8 +132,8 @@ def compute_steering_vectors(
     return steering_vectors
 
 def main():
-    chat_model = AutoModelForCausalLM.from_pretrained(config.chat_model_id, torch_dtype=torch.float16, device_map="auto").eval()
-    tokenizer = AutoTokenizer.from_pretrained(config.chat_model_id)
+    base_model = AutoModelForCausalLM.from_pretrained(config.base_model_id, torch_dtype=torch.float16, device_map="auto").eval()
+    tokenizer = AutoTokenizer.from_pretrained(config.base_model_id)
     tokenizer.pad_token = tokenizer.eos_token
 
     with open(config.behavioral_prompts_filepath, 'r') as f:
@@ -142,7 +142,7 @@ def main():
     all_behavioral_prompts = output['prompts']
     contrastive_pairs = create_contrastive_pairs(all_behavioral_prompts, num_pairs_per_category=100)
 
-    steering_vectors = compute_steering_vectors(contrastive_pairs, chat_model, tokenizer, config.target_layer, device)
+    steering_vectors = compute_steering_vectors(contrastive_pairs, base_model, tokenizer, config.target_layer, device)
     torch.save(steering_vectors, config.steering_vectors_filepath)
 
 if __name__ == "__main__":

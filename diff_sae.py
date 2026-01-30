@@ -37,20 +37,26 @@ class DiffSAE(nn.Module):
 
     def forward(self, x: Float[Tensor, "batch input_dim"], return_aux: bool = False):
         pre_activations = self.encode(x)
-        pre_activations = torch.relu(pre_activations)
-        latents = self.batchtopk(pre_activations, self.k)
+        abs_activations = torch.abs(pre_activations)
+        topk_values, topk_indices = torch.topk(abs_activations, self.k, dim=-1)
+        latents = torch.zeros_like(pre_activations)
+        latents.scatter_(-1, topk_indices, torch.gather(pre_activations, -1, topk_indices))
+        
         x_reconstructed = self.decode(latents)
-        if return_aux:
-            topk_indices = torch.topk(pre_activations, self.k, dim=-1)[1]
 
-            mask = torch.ones_like(pre_activations, dtype=torch.bool)
+        if return_aux:
+            mask = torch.ones_like(abs_activations, dtype=torch.bool)
             mask.scatter_(-1, topk_indices, False)
 
-            dead_features = (pre_activations * mask.float())
-            aux_latents = self.batchtopk(dead_features,min(self.auxk, dead_features.shape[-1]))
-            aux_reconstructed = self.decode(aux_latents)
+            dead_features_abs = abs_activations * mask.float()
+            aux_topk_indices = torch.topk(dead_features_abs, min(self.auxk, dead_features_abs.shape[-1]), dim=-1)[1]
 
+            aux_latents = torch.zeros_like(pre_activations)
+            aux_latents.scatter_(-1, aux_topk_indices, torch.gather(pre_activations, -1, aux_topk_indices))
+
+            aux_reconstructed = self.decode(aux_latents)
             aux_loss = torch.nn.functional.mse_loss(aux_reconstructed, x)
+
             return x_reconstructed, latents, aux_loss
 
         return x_reconstructed, latents
